@@ -1,0 +1,701 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Algae Energy Kit</title>
+<meta name="description" content="Algae Energy Kit: hands-on bioelectricity STEM experiment that turns living algae into a working micro-power generator.">
+<style>
+  :root {
+    --bg: #f6faf5;
+    --surface: #ffffff;
+    --surface-2: #eef6ec;
+    --text: #17241a;
+    --muted: #55665a;
+    --border: #d6e4d3;
+    --accent: #2f8a3e;
+    --accent-strong: #1f6b2c;
+    --accent-soft: #dcf0dd;
+    --glow: #7fd36a;
+    --warn: #b85c00;
+    --shadow: 0 1px 2px rgba(20,40,20,.06), 0 8px 24px rgba(20,40,20,.06);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0f1511;
+      --surface: #161f19;
+      --surface-2: #1c2820;
+      --text: #e4efe5;
+      --muted: #9db0a1;
+      --border: #2a3a2e;
+      --accent: #6cc77a;
+      --accent-strong: #8fdc9b;
+      --accent-soft: #1f3524;
+      --glow: #7fd36a;
+      --warn: #f0a24a;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.25);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0f1511;
+    --surface: #161f19;
+    --surface-2: #1c2820;
+    --text: #e4efe5;
+    --muted: #9db0a1;
+    --border: #2a3a2e;
+    --accent: #6cc77a;
+    --accent-strong: #8fdc9b;
+    --accent-soft: #1f3524;
+    --glow: #7fd36a;
+    --warn: #f0a24a;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.25);
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 16px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 0 16px; }
+
+  /* Hero */
+  header.hero {
+    background:
+      radial-gradient(1200px 400px at 85% -10%, rgba(127,211,106,.35), transparent 60%),
+      linear-gradient(160deg, #0e3b1a 0%, #165c2a 55%, #1f7a35 100%);
+    color: #f1fbef;
+    padding: 56px 0 48px;
+  }
+  .hero-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 40px; align-items: center; }
+  .eyebrow { text-transform: uppercase; letter-spacing: .14em; font-size: 12px; font-weight: 600; opacity: .8; }
+  .hero h1 { font-size: clamp(30px, 5vw, 48px); line-height: 1.1; margin: 10px 0 14px; letter-spacing: -.01em; }
+  .hero p.lede { font-size: 18px; opacity: .92; margin: 0 0 22px; max-width: 34em; }
+  .hero .subtitle { font-size: 15px; line-height: 1.5; opacity: .85; margin: 0 0 14px; max-width: 40em; }
+  .tagline { font-weight: 600; font-size: 15px; letter-spacing: .02em; color: #c9f5bd; }
+  .pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+  .pill { background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.22); border-radius: 999px; padding: 4px 12px; font-size: 13px; }
+
+  /* Reactor illustration */
+  .reactor { width: 100%; max-width: 320px; margin: 0 auto; display: block; }
+  .bubble { animation: rise 4s linear infinite; }
+  .bubble:nth-child(2) { animation-delay: -1.2s; }
+  .bubble:nth-child(3) { animation-delay: -2.4s; }
+  .bubble:nth-child(4) { animation-delay: -3.1s; }
+  @keyframes rise { from { transform: translateY(0); opacity: 0; } 15% { opacity: .9; } to { transform: translateY(-150px); opacity: 0; } }
+  .led { animation: pulse 2.4s ease-in-out infinite; }
+  @keyframes pulse { 50% { opacity: .45; } }
+  @media (prefers-reduced-motion: reduce) { .bubble, .led { animation: none; } }
+
+  /* Nav */
+  nav.toc { position: sticky; top: 0; z-index: 5; background: var(--surface); border-bottom: 1px solid var(--border); }
+  nav.toc .wrap { display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; }
+  nav.toc a { white-space: nowrap; padding: 12px 10px; font-size: 14px; color: var(--muted); text-decoration: none; border-bottom: 2px solid transparent; }
+  nav.toc a:hover { color: var(--accent-strong); border-bottom-color: var(--accent); }
+
+  main { padding: 32px 0 64px; }
+  section { margin: 0 0 40px; scroll-margin-top: 56px; }
+  h2 { font-size: 22px; margin: 0 0 6px; letter-spacing: -.005em; }
+  .sub { color: var(--muted); font-size: 14px; margin: 0 0 18px; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 22px; box-shadow: var(--shadow); }
+
+
+  /* Bullets */
+  .bullets { display: grid; gap: 14px; }
+  .bullet { display: grid; grid-template-columns: 40px 1fr; gap: 14px; align-items: start; }
+  .num { width: 40px; height: 40px; border-radius: 10px; background: var(--accent-soft); color: var(--accent-strong); display: grid; place-items: center; font-weight: 700; }
+  .bullet h3 { font-size: 16px; margin: 0 0 4px; }
+  .bullet p { margin: 0; color: var(--muted); }
+
+  /* Description */
+  .desc p { margin: 0 0 14px; }
+  .desc .closer { font-weight: 700; color: var(--accent-strong); font-size: 18px; margin: 18px 0 0; }
+
+  /* Lists */
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  ul.check { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+  ul.check li { display: grid; grid-template-columns: 22px 1fr; gap: 10px; }
+  ul.check li::before {
+    content: ""; width: 20px; height: 20px; margin-top: 2px; border-radius: 50%;
+    background: var(--accent-soft) center/12px no-repeat url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2 6.5l2.5 2.5L10 3.5' fill='none' stroke='%232f8a3e' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  }
+  .box-list { counter-reset: item; }
+  .box-list li { display: flex; gap: 12px; padding: 10px 0; border-bottom: 1px dashed var(--border); list-style: none; }
+  .box-list li:last-child { border-bottom: 0; }
+  .box-list li::before { counter-increment: item; content: counter(item, decimal-leading-zero); color: var(--accent); font-weight: 700; font-variant-numeric: tabular-nums; }
+  ol.box-list { padding: 0; margin: 0; }
+
+  /* Specs */
+  table.specs { width: 100%; border-collapse: collapse; }
+  table.specs th, table.specs td { text-align: left; padding: 12px 0; border-bottom: 1px solid var(--border); vertical-align: top; }
+  table.specs tr:last-child th, table.specs tr:last-child td { border-bottom: 0; }
+  table.specs th { width: 38%; color: var(--muted); font-weight: 500; padding-right: 16px; }
+
+  /* Keywords */
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip { background: var(--surface-2); border: 1px solid var(--border); border-radius: 999px; padding: 5px 12px; font-size: 14px; }
+
+  /* A+ modules */
+  :root {
+    --algae: #4fae4a; --water: #dcf1e6; --glass: #8fb3a0; --graphite: #3d4440;
+    --wire-red: #d9483b; --amber: #e0a21b; --led: #a6f04a; --border-strong: #b5cbb1;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --algae: #6cc77a; --water: #17342a; --glass: #6a8f7b; --graphite: #a9b3ac;
+      --wire-red: #ff7a6b; --amber: #f0b43a; --border-strong: #3d5443;
+    }
+  }
+  :root[data-theme="dark"] {
+    --algae: #6cc77a; --water: #17342a; --glass: #6a8f7b; --graphite: #a9b3ac;
+    --wire-red: #ff7a6b; --amber: #f0b43a; --border-strong: #3d5443;
+  }
+  .modules { display: grid; gap: 22px; }
+  .module { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; box-shadow: var(--shadow); }
+  .module .diagram { background: var(--surface-2); border-bottom: 1px solid var(--border); overflow-x: auto; padding: 8px; }
+  .module .body { padding: 18px 22px 22px; display: grid; grid-template-columns: 1fr 2fr; gap: 4px 28px; align-items: start; }
+  .module .body h3 { margin: 0; font-size: 18px; }
+  .module .body p { margin: 0; color: var(--muted); }
+  @media (max-width: 760px) { .module .body { grid-template-columns: 1fr; } }
+
+  /* Technical diagrams (inline SVG, themed via tokens) */
+  .dg { display: block; width: 100%; height: auto; min-width: 640px; }
+  .dg text { fill: var(--text); font: 500 14px system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  .dg .hd { font-size: 15px; font-weight: 700; }
+  .dg .st { font-size: 13px; font-weight: 500; }
+  .dg .sm { font-size: 12px; font-weight: 400; fill: var(--muted); }
+  .dg .onb { fill: #cfe9d2; font-size: 12px; font-weight: 500; }
+  .dg .co2 { fill: var(--muted); font-size: 17px; font-weight: 700; }
+  .dg .glass { fill: var(--surface); fill-opacity: .5; stroke: var(--glass); stroke-width: 2; }
+  .dg .lid { fill: var(--glass); }
+  .dg .water { fill: var(--water); }
+  .dg .algae { fill: var(--algae); }
+  .dg .graphite { fill: var(--graphite); }
+  .dg .stone { fill: var(--muted); }
+  .dg .red { stroke: var(--wire-red); stroke-width: 3; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+  .dg .blk { stroke: var(--text); stroke-width: 3; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+  .dg .post-red { fill: var(--wire-red); }
+  .dg .post-blk { fill: var(--text); }
+  .dg .tube { stroke: var(--glass); stroke-width: 5; fill: none; stroke-linecap: round; }
+  .dg .ln { stroke: var(--muted); stroke-width: 1.3; fill: none; }
+  .dg .dash { stroke-dasharray: 6 5; }
+  .dg .flow { stroke: var(--accent); stroke-width: 2.2; fill: none; marker-end: url(#ah); }
+  .dg .ray { stroke: var(--amber); stroke-width: 2.5; fill: none; marker-end: url(#ah-amber); }
+  .dg .sun { fill: var(--amber); }
+  .dg .sunray { stroke: var(--amber); stroke-width: 2.5; stroke-linecap: round; fill: none; }
+  .dg .box { fill: var(--surface); stroke: var(--border-strong); stroke-width: 1.5; }
+  .dg .panel { fill: var(--surface); stroke: var(--border); stroke-width: 1.2; }
+  .dg .board { fill: #0b2412; stroke: var(--border-strong); stroke-width: 1.5; }
+  .dg .led { fill: var(--led); }
+  .dg .glow { fill: var(--led); opacity: .25; }
+  .dg .seg { fill: #24502f; }
+  .dg .seg.on { fill: var(--led); }
+  .dg .bub { fill: none; stroke: var(--glass); stroke-width: 1.5; }
+  .dg .badge { fill: var(--accent); }
+  .dg text.badge-t { fill: #fff; font-size: 13px; font-weight: 700; }
+  .dg .qr { fill: var(--text); }
+  .dg .qrf { fill: none; stroke: var(--text); stroke-width: 3; }
+  .ah { fill: var(--accent); }
+  .ah-amber { fill: var(--amber); }
+
+  footer { border-top: 1px solid var(--border); padding: 24px 0 40px; color: var(--muted); font-size: 13px; }
+
+  @media (max-width: 760px) {
+    .hero-grid, .two { grid-template-columns: 1fr; }
+    .reactor { max-width: 220px; }
+    header.hero { padding: 40px 0 36px; }
+    table.specs th { width: 45%; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow">STEM Science Kit · Renewable Energy</div>
+      <h1>Algae Energy Kit</h1>
+      <p class="subtitle">Hands‑On Bioelectricity STEM Experiment | Renewable Micro‑Power Generator | Grow Algae, Measure Electricity, Learn Carbon Capture | Educational Science Kit for Students &amp; Hobbyists</p>
+      <p class="lede">A hands‑on bioelectricity experiment that turns living algae into a working micro‑power generator, built for classrooms, science fairs and curious makers.</p>
+      <div class="tagline">Grow power. See energy. Learn sustainability.</div>
+      <div class="pills">
+        <span class="pill">Ages 11+</span>
+        <span class="pill">Low‑voltage &amp; non‑toxic</span>
+        <span class="pill">Supports NGSS</span>
+        <span class="pill">Reusable modules</span>
+      </div>
+    </div>
+    <svg class="reactor" viewBox="0 0 240 280" role="img" aria-label="Illustration of a glowing green photobioreactor chamber connected to an LED display">
+      <defs>
+        <linearGradient id="algae" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#9be87f" stop-opacity=".85"/>
+          <stop offset="1" stop-color="#2f9a3e" stop-opacity=".95"/>
+        </linearGradient>
+        <radialGradient id="halo" cx=".5" cy=".55" r=".6">
+          <stop offset="0" stop-color="#9be87f" stop-opacity=".45"/>
+          <stop offset="1" stop-color="#9be87f" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+      <ellipse cx="100" cy="150" rx="110" ry="130" fill="url(#halo)"/>
+      <rect x="50" y="40" width="100" height="200" rx="16" fill="rgba(255,255,255,.08)" stroke="rgba(255,255,255,.6)" stroke-width="2"/>
+      <rect x="56" y="80" width="88" height="154" rx="12" fill="url(#algae)"/>
+      <g fill="rgba(255,255,255,.75)">
+        <circle class="bubble" cx="80" cy="225" r="4"/>
+        <circle class="bubble" cx="104" cy="228" r="3"/>
+        <circle class="bubble" cx="122" cy="222" r="5"/>
+        <circle class="bubble" cx="92" cy="230" r="2.5"/>
+      </g>
+      <rect x="70" y="60" width="10" height="170" rx="3" fill="#2b2b2b" opacity=".85"/>
+      <rect x="120" y="60" width="10" height="170" rx="3" fill="#2b2b2b" opacity=".85"/>
+      <rect x="44" y="28" width="112" height="16" rx="6" fill="rgba(255,255,255,.85)"/>
+      <path d="M75 28 V12 H190 V110" fill="none" stroke="#e85a4f" stroke-width="3"/>
+      <path d="M125 28 V18 H205 V110" fill="none" stroke="#2b2b2b" stroke-width="3"/>
+      <rect x="176" y="110" width="44" height="60" rx="8" fill="#0b2412" stroke="rgba(255,255,255,.5)" stroke-width="1.5"/>
+      <circle class="led" cx="198" cy="132" r="9" fill="#c9ff6a"/>
+      <rect x="184" y="152" width="8" height="8" rx="1.5" fill="#c9ff6a"/><rect x="194" y="152" width="8" height="8" rx="1.5" fill="#c9ff6a"/><rect x="204" y="152" width="8" height="8" rx="1.5" fill="#2a5a33"/>
+    </svg>
+  </div>
+</header>
+
+<nav class="toc" aria-label="Page sections">
+  <div class="wrap">
+    <a href="#bullets">About this item</a>
+    <a href="#description">Description</a>
+    <a href="#included">What's included</a>
+    <a href="#specs">Technical details</a>
+    <a href="#keywords">What you'll learn</a>
+    <a href="#aplus">Enhanced Brand Content</a>
+  </div>
+</nav>
+
+<main class="wrap">
+
+
+  <section id="bullets">
+    <h2>About this item</h2>
+    <p class="sub">Five reasons the Algae Energy Kit belongs in your classroom, club or workshop.</p>
+    <div class="card bullets">
+      <div class="bullet"><div class="num">1</div><div><h3>Grow Real Algae That Generates Electricity</h3><p>Experience renewable micro‑power firsthand. This kit uses living algae to produce measurable electrical output, letting students and hobbyists see bioelectricity in action.</p></div></div>
+      <div class="bullet"><div class="num">2</div><div><h3>Complete STEM Learning Kit for Classrooms &amp; Makers</h3><p>Includes photobioreactor chamber, electrode module, nutrient packs, tubing, air pump, LED display board, and illustrated instructions. Designed for middle school, high school, and beginner makers.</p></div></div>
+      <div class="bullet"><div class="num">3</div><div><h3>Safe, Modular, and Easy to Assemble</h3><p>All components are low‑voltage, non‑toxic, and classroom‑safe. Color‑coded connectors and step‑by‑step visuals make assembly simple for first‑time users.</p></div></div>
+      <div class="bullet"><div class="num">4</div><div><h3>Learn About Carbon Capture &amp; Biological Carbon Credits</h3><p>The kit introduces how algae absorb CO₂ and how biological systems can be used to verify carbon credits. Includes a Carbon Credit Tracker Card with QR‑linked learning resources.</p></div></div>
+      <div class="bullet"><div class="num">5</div><div><h3>Tested by Real Students and Educators</h3><p>10 beta testers provided feedback on usability, clarity, and educational value. Improvements include clearer diagrams, simplified connectors, and optional data‑logging guidance.</p></div></div>
+    </div>
+  </section>
+
+  <section id="description">
+    <h2>Product description</h2>
+    <p class="sub">Real algae. Real electricity. Real science you can see.</p>
+    <div class="card desc">
+      <p>Unlock the science of renewable energy with the <strong>Algae Energy Kit</strong>, a hands‑on STEM experiment that turns living algae into a working micro‑power generator. Designed for students, educators, and curious makers, this kit transforms real algae‑bioelectricity research into an accessible, safe, and engaging learning experience.</p>
+      <p>Inside the photobioreactor chamber, algae grow and begin producing tiny amounts of electricity through natural biological processes. The included electrode module captures this current, and the LED display board shows your power output in real time. Users can adjust light levels, nutrients, and airflow to see how biological conditions affect energy production.</p>
+      <p>The kit also introduces the concept of carbon capture and biological carbon credits, showing how algae absorb CO₂ and how living systems can contribute to measurable climate solutions. A Carbon Credit Tracker Card and QR‑linked learning site provide easy, age‑appropriate explanations.</p>
+      <p>Whether used in classrooms, science fairs, sustainability clubs, or home maker projects, the Algae Energy Kit delivers a unique blend of biology, engineering, and environmental science. With modular components, clear instructions, and safety‑first design, it's an ideal entry point into renewable energy education.</p>
+      <p class="closer">Grow power. See energy. Learn sustainability.</p>
+    </div>
+  </section>
+
+  <section id="included">
+    <div class="two">
+      <div>
+        <h2>What's included</h2>
+        <p class="sub">Everything you need to start generating power, right in the box.</p>
+        <div class="card">
+          <ol class="box-list">
+            <li>Photobioreactor chamber (clear acrylic)</li>
+            <li>Electrode module (graphite/carbon cloth)</li>
+            <li>Micro‑power LED display board</li>
+            <li>Nutrient solution packs</li>
+            <li>Tubing and mini air pump</li>
+            <li>Quick‑start card</li>
+            <li>Full instructional booklet</li>
+            <li>Carbon Credit Tracker Card (QR‑linked learning site)</li>
+          </ol>
+        </div>
+      </div>
+      <div>
+        <h2>Features &amp; benefits</h2>
+        <p class="sub">Built for learning, designed for safety.</p>
+        <div class="card">
+          <ul class="check">
+            <li>Real biological power generation</li>
+            <li>Safe for classrooms (low voltage, non‑toxic)</li>
+            <li>Modular and reusable components</li>
+            <li>Transparent chamber for visual learning</li>
+            <li>Supports NGSS energy &amp; ecosystem standards</li>
+            <li>Encourages experimentation and data collection</li>
+            <li>Perfect for science fairs and sustainability projects</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="specs">
+    <h2>Technical details</h2>
+    <p class="sub">Specifications at a glance.</p>
+    <div class="card">
+      <table class="specs">
+        <tr><th scope="row">Voltage output</th><td>Micro‑current range (suitable for LED indicator)</td></tr>
+        <tr><th scope="row">Power source</th><td>Sunlight or indoor grow light</td></tr>
+        <tr><th scope="row">Pump</th><td>Low‑noise micro air pump</td></tr>
+        <tr><th scope="row">Materials</th><td>Acrylic, graphite, silicone tubing</td></tr>
+        <tr><th scope="row">Recommended age</th><td>11+</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <section id="keywords">
+    <h2>What you'll learn</h2>
+    <p class="sub">Science and engineering ideas this kit brings to life.</p>
+    <div class="card">
+      <div class="chips">
+        <span class="chip">Bioelectricity</span>
+        <span class="chip">Renewable energy</span>
+        <span class="chip">Micro‑power generation</span>
+        <span class="chip">Carbon capture</span>
+        <span class="chip">Photobioreactors</span>
+        <span class="chip">Biology meets engineering</span>
+        <span class="chip">Environmental science</span>
+        <span class="chip">Sustainability</span>
+        <span class="chip">Science fair projects</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="aplus">
+    <h2>Enhanced Brand Content</h2>
+    <p class="sub">See exactly how living algae become a working power source.</p>
+
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+      <defs>
+        <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah" d="M0 0L10 5L0 10z"/></marker>
+        <marker id="ah-amber" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah-amber" d="M0 0L10 5L0 10z"/></marker>
+      </defs>
+    </svg>
+
+    <div class="modules">
+
+      <!-- Module 1: how algae bioelectricity works -->
+      <article class="module">
+        <div class="diagram">
+          <svg class="dg" viewBox="0 0 960 400" role="img" aria-label="Cross-section: light drives algae photosynthesis, algae pass electrons to the carbon cloth anode, electrons flow through the wire to the LED display board, and the circuit closes at the graphite cathode.">
+            <circle class="sun" cx="100" cy="90" r="24"/>
+            <path class="sunray" d="M100 54v-12M100 126v12M64 90h-12M136 90h12M75 65l-8-8M125 65l8-8M75 115l-8 8M125 115l8 8"/>
+            <text class="hd" x="100" y="168" text-anchor="middle">Light</text>
+            <text class="sm" x="100" y="186" text-anchor="middle">sun or grow light</text>
+            <path class="ray" d="M142 104L244 150"/>
+            <path class="ray" d="M138 126L244 212"/>
+
+            <rect class="lid" x="238" y="96" width="324" height="14" rx="5"/>
+            <rect class="glass" x="250" y="108" width="300" height="252" rx="16"/>
+            <rect class="water" x="258" y="140" width="284" height="212" rx="10"/>
+            <g class="algae">
+              <circle cx="335" cy="175" r="7"/><circle cx="372" cy="163" r="6"/><circle cx="410" cy="182" r="8"/><circle cx="452" cy="168" r="6"/>
+              <circle cx="345" cy="215" r="6"/><circle cx="392" cy="226" r="9"/><circle cx="440" cy="208" r="7"/><circle cx="468" cy="240" r="6"/>
+              <circle cx="330" cy="256" r="8"/><circle cx="377" cy="265" r="6"/><circle cx="420" cy="250" r="7"/><circle cx="458" cy="272" r="6"/>
+              <circle cx="345" cy="334" r="6"/><circle cx="392" cy="336" r="7"/><circle cx="440" cy="333" r="6"/><circle cx="472" cy="330" r="5"/>
+            </g>
+            <rect class="graphite" x="290" y="84" width="16" height="256" rx="3"/>
+            <rect class="graphite" x="494" y="84" width="16" height="256" rx="3"/>
+
+            <path class="flow" d="M366 198H312"/>
+            <text class="st" x="340" y="194" text-anchor="middle">e⁻</text>
+            <text class="sm" x="400" y="298" text-anchor="middle">H⁺ moves through the medium</text>
+            <path class="flow dash" d="M312 308H488"/>
+
+            <path class="blk" d="M298 84V40H850V70"/>
+            <path class="red" d="M502 84V60H790V70"/>
+            <text class="sm" x="582" y="31" text-anchor="end">e⁻ flow</text>
+            <path class="flow" d="M590 26H660"/>
+
+            <rect class="board" x="740" y="70" width="150" height="110" rx="10"/>
+            <circle class="post-red" cx="790" cy="70" r="5"/><circle class="post-blk" cx="850" cy="70" r="5"/>
+            <text class="onb" x="790" y="94" text-anchor="middle">+</text><text class="onb" x="850" y="94" text-anchor="middle">−</text>
+            <circle class="glow" cx="820" cy="120" r="20"/><circle class="led" cx="820" cy="120" r="10"/>
+            <rect class="seg on" x="772" y="150" width="14" height="10" rx="2"/><rect class="seg on" x="790" y="150" width="14" height="10" rx="2"/><rect class="seg on" x="808" y="150" width="14" height="10" rx="2"/><rect class="seg" x="826" y="150" width="14" height="10" rx="2"/><rect class="seg" x="844" y="150" width="14" height="10" rx="2"/>
+            <text class="hd" x="815" y="202" text-anchor="middle">LED display board</text>
+
+            <text class="hd" x="232" y="248" text-anchor="end">Anode (−)</text>
+            <text class="sm" x="232" y="266" text-anchor="end">carbon cloth</text>
+            <path class="ln" d="M238 253H290"/>
+            <text class="hd" x="575" y="170">Cathode (+)</text>
+            <text class="sm" x="575" y="188">graphite</text>
+            <path class="ln" d="M510 175H568"/>
+            <text class="st" x="400" y="388" text-anchor="middle">Algae culture in nutrient medium</text>
+
+            <g>
+              <circle class="badge" cx="640" cy="236" r="11"/><text class="badge-t" x="640" y="241" text-anchor="middle">1</text><text class="st" x="660" y="241">Light powers photosynthesis</text>
+              <circle class="badge" cx="640" cy="268" r="11"/><text class="badge-t" x="640" y="273" text-anchor="middle">2</text><text class="st" x="660" y="273">Algae pass electrons to the anode</text>
+              <circle class="badge" cx="640" cy="300" r="11"/><text class="badge-t" x="640" y="305" text-anchor="middle">3</text><text class="st" x="660" y="305">Electrons flow through the wire to the LED</text>
+              <circle class="badge" cx="640" cy="332" r="11"/><text class="badge-t" x="640" y="337" text-anchor="middle">4</text><text class="st" x="660" y="337">The circuit closes at the cathode</text>
+            </g>
+          </svg>
+        </div>
+        <div class="body">
+          <h3>Grow Power from Living Algae</h3>
+          <p>Algae do more than grow. As they photosynthesize, they release tiny electrical charges. The carbon cloth anode collects them, the current travels through the circuit, and the LED lights up. It’s renewable energy you can watch happen.</p>
+        </div>
+      </article>
+
+      <!-- Module 2: components / exploded view -->
+      <article class="module">
+        <div class="diagram">
+          <svg class="dg" viewBox="0 0 960 400" role="img" aria-label="Labeled layout of all eight kit components and how they connect: nutrient packs into the chamber, air pump tubing into the chamber, electrode module wired with red and black leads to the LED display board, plus the quick-start card, booklet and Carbon Credit Tracker Card.">
+            <rect class="box" x="60" y="72" width="50" height="70" rx="6"/><rect class="box" x="120" y="72" width="50" height="70" rx="6"/>
+            <path class="ln" d="M60 84h50M120 84h50"/>
+            <circle class="algae" cx="85" cy="115" r="9"/><circle class="algae" cx="145" cy="115" r="9"/>
+            <text x="115" y="168" text-anchor="middle">④ Nutrient packs</text>
+            <path class="flow dash" d="M180 105C260 105 330 120 388 150"/>
+            <text class="sm" x="262" y="100" text-anchor="middle">add to water</text>
+
+            <rect class="box" x="60" y="250" width="120" height="70" rx="12"/>
+            <path class="ln" d="M78 270h40M78 285h40M78 300h40"/>
+            <circle class="ln" cx="152" cy="285" r="12"/>
+            <text x="120" y="345" text-anchor="middle">⑤ Mini air pump</text>
+            <text class="sm" x="120" y="363" text-anchor="middle">with silicone tubing</text>
+
+            <rect class="lid" x="392" y="98" width="186" height="16" rx="5"/>
+            <rect class="glass" x="400" y="112" width="170" height="228" rx="16"/>
+            <rect class="water" x="407" y="145" width="156" height="188" rx="10"/>
+            <g class="algae"><circle cx="460" cy="170" r="6"/><circle cx="505" cy="190" r="7"/><circle cx="462" cy="250" r="6"/><circle cx="510" cy="265" r="6"/><circle cx="508" cy="225" r="5"/><circle cx="458" cy="210" r="5"/></g>
+            <path class="tube" d="M180 285C290 285 300 322 400 322H470"/>
+            <rect class="stone" x="468" y="316" width="34" height="12" rx="6"/>
+            <circle class="bub" cx="480" cy="300" r="4"/><circle class="bub" cx="492" cy="280" r="3"/><circle class="bub" cx="480" cy="258" r="5"/><circle class="bub" cx="490" cy="232" r="3"/><circle class="bub" cx="482" cy="206" r="4"/>
+            <rect class="graphite" x="430" y="104" width="14" height="210" rx="3"/>
+            <rect class="graphite" x="524" y="104" width="14" height="210" rx="3"/>
+            <text x="485" y="372" text-anchor="middle">① Photobioreactor chamber</text>
+            <text class="sm" x="485" y="390" text-anchor="middle">clear acrylic</text>
+            <text x="382" y="205" text-anchor="end">② Electrode module</text>
+            <text class="sm" x="382" y="223" text-anchor="end">carbon cloth + graphite</text>
+            <path class="ln" d="M388 210H430"/>
+
+            <path class="blk" d="M437 98V40H720V130"/>
+            <path class="red" d="M531 98V60H700V130"/>
+            <circle class="post-blk" cx="437" cy="98" r="5"/><circle class="post-red" cx="531" cy="98" r="5"/>
+            <text class="sm" x="600" y="33" text-anchor="middle">black lead (−)</text>
+            <text class="sm" x="615" y="53" text-anchor="middle">red lead (+)</text>
+
+            <rect class="board" x="660" y="130" width="160" height="100" rx="10"/>
+            <circle class="post-red" cx="700" cy="130" r="5"/><circle class="post-blk" cx="720" cy="130" r="5"/>
+            <circle class="glow" cx="740" cy="170" r="18"/><circle class="led" cx="740" cy="170" r="9"/>
+            <rect class="seg on" x="692" y="203" width="14" height="10" rx="2"/><rect class="seg on" x="712" y="203" width="14" height="10" rx="2"/><rect class="seg on" x="732" y="203" width="14" height="10" rx="2"/><rect class="seg" x="752" y="203" width="14" height="10" rx="2"/><rect class="seg" x="772" y="203" width="14" height="10" rx="2"/>
+            <text x="740" y="255" text-anchor="middle">③ LED display board</text>
+            <text class="sm" x="740" y="273" text-anchor="middle">color‑coded terminals</text>
+
+            <rect class="box" x="850" y="60" width="80" height="52" rx="4"/>
+            <path class="ln" d="M860 74h50M860 86h60M860 98h40"/>
+            <text class="st" x="890" y="132" text-anchor="middle">⑥ Quick‑start card</text>
+            <rect class="box" x="850" y="160" width="80" height="70" rx="4"/>
+            <path class="ln" d="M860 160v70M870 176h50M870 188h50M870 200h36"/>
+            <text class="st" x="890" y="250" text-anchor="middle">⑦ Instruction booklet</text>
+            <rect class="box" x="850" y="280" width="80" height="52" rx="4"/>
+            <rect class="qrf" x="860" y="290" width="12" height="12"/><rect class="qrf" x="886" y="290" width="12" height="12"/><rect class="qrf" x="860" y="314" width="12" height="12"/>
+            <rect class="qr" x="888" y="316" width="4" height="4"/><rect class="qr" x="896" y="322" width="4" height="4"/><rect class="qr" x="906" y="292" width="4" height="4"/><rect class="qr" x="912" y="312" width="4" height="4"/><rect class="qr" x="904" y="324" width="4" height="4"/>
+            <text class="st" x="890" y="352" text-anchor="middle">⑧ Carbon Credit</text>
+            <text class="st" x="890" y="370" text-anchor="middle">Tracker Card</text>
+          </svg>
+        </div>
+        <div class="body">
+          <h3>What You'll Build</h3>
+          <p>Eight reusable components snap together into a working bio‑power station. Color‑coded red and black leads, a clear acrylic chamber and an illustrated booklet make the first build simple, even for first‑time makers.</p>
+        </div>
+      </article>
+
+      <!-- Module 3: output circuit -->
+      <article class="module">
+        <div class="diagram">
+          <svg class="dg" viewBox="0 0 960 400" role="img" aria-label="Circuit view: light level, nutrients and airflow feed into the algae chamber, whose electrodes connect to the LED display board, with an optional multimeter for data logging.">
+            <rect class="box" x="40" y="60" width="200" height="70" rx="12"/>
+            <circle class="sun" cx="72" cy="95" r="11"/>
+            <text class="hd" x="100" y="90">Light level</text><text class="sm" x="100" y="110">brighter or dimmer</text>
+            <rect class="box" x="40" y="165" width="200" height="70" rx="12"/>
+            <path class="algae" d="M72 186c-8 11-12 17-12 22a12 12 0 0 0 24 0c0-5-4-11-12-22z"/>
+            <text class="hd" x="100" y="195">Nutrients</text><text class="sm" x="100" y="215">more or less feed</text>
+            <rect class="box" x="40" y="270" width="200" height="70" rx="12"/>
+            <circle class="bub" cx="66" cy="316" r="6"/><circle class="bub" cx="78" cy="298" r="5"/><circle class="bub" cx="68" cy="284" r="3.5"/>
+            <text class="hd" x="100" y="300">Airflow</text><text class="sm" x="100" y="320">pump on or off</text>
+            <path class="flow" d="M242 95L330 165"/>
+            <path class="flow" d="M242 200H330"/>
+            <path class="flow" d="M242 305L330 238"/>
+
+            <rect class="lid" x="332" y="78" width="156" height="14" rx="5"/>
+            <rect class="glass" x="340" y="90" width="140" height="240" rx="14"/>
+            <rect class="water" x="347" y="120" width="126" height="202" rx="9"/>
+            <g class="algae"><circle cx="395" cy="150" r="6"/><circle cx="425" cy="175" r="7"/><circle cx="400" cy="210" r="6"/><circle cx="428" cy="240" r="7"/><circle cx="398" cy="270" r="5"/><circle cx="420" cy="300" r="6"/></g>
+            <rect class="graphite" x="362" y="82" width="12" height="220" rx="3"/>
+            <rect class="graphite" x="444" y="82" width="12" height="220" rx="3"/>
+            <text class="hd" x="410" y="355" text-anchor="middle">Algae chamber</text>
+
+            <path class="blk" d="M368 82V45H780V110"/>
+            <path class="red" d="M450 82V62H640V110"/>
+            <text class="sm" x="512" y="37" text-anchor="end">micro‑current</text>
+            <path class="flow" d="M520 32H590"/>
+
+            <rect class="board" x="600" y="110" width="220" height="190" rx="14"/>
+            <circle class="post-red" cx="640" cy="110" r="5"/><circle class="post-blk" cx="780" cy="110" r="5"/>
+            <text class="onb" x="640" y="132" text-anchor="middle">+</text><text class="onb" x="780" y="132" text-anchor="middle">−</text>
+            <circle class="glow" cx="710" cy="178" r="40"/><circle class="led" cx="710" cy="178" r="18"/>
+            <text class="onb" x="710" y="240" text-anchor="middle">LED lights as current flows</text>
+            <rect class="seg on" x="642" y="255" width="18" height="12" rx="2"/><rect class="seg on" x="666" y="255" width="18" height="12" rx="2"/><rect class="seg on" x="690" y="255" width="18" height="12" rx="2"/><rect class="seg on" x="714" y="255" width="18" height="12" rx="2"/><rect class="seg" x="738" y="255" width="18" height="12" rx="2"/><rect class="seg" x="762" y="255" width="18" height="12" rx="2"/>
+            <text class="onb" x="710" y="288" text-anchor="middle">output level</text>
+            <text class="hd" x="710" y="325" text-anchor="middle">LED display board</text>
+
+            <path class="ln dash" d="M820 180H850M820 230H850"/>
+            <rect class="box dash" x="850" y="150" width="90" height="120" rx="10"/>
+            <circle class="ln" cx="895" cy="195" r="18"/><path class="ln" d="M895 195l10-10"/>
+            <text class="st" x="895" y="240" text-anchor="middle">Multimeter</text>
+            <text class="sm" x="895" y="256" text-anchor="middle">optional logging</text>
+
+            <text class="st" x="480" y="388" text-anchor="middle">Adjust light, nutrients and airflow, then watch the output change.</text>
+          </svg>
+        </div>
+        <div class="body">
+          <h3>See Your Energy Output</h3>
+          <p>Your algae. Your electricity. The LED display board lights up as current flows, so you can see the results in real time. Change the light, nutrients or airflow and watch the output respond, or connect a multimeter to log your own data.</p>
+        </div>
+      </article>
+
+      <!-- Module 4: carbon flow -->
+      <article class="module">
+        <div class="diagram">
+          <svg class="dg" viewBox="0 0 960 400" role="img" aria-label="Carbon flow: CO₂ in room air is pumped into the chamber, algae photosynthesis turns it into biomass and releases oxygen, and growth is logged on the Carbon Credit Tracker Card with a QR-linked learning site.">
+            <rect class="box" x="30" y="140" width="130" height="130" rx="14"/>
+            <text class="co2" x="58" y="182">CO₂</text><text class="co2" x="98" y="214">CO₂</text><text class="co2" x="52" y="250">CO₂</text>
+            <text class="hd" x="95" y="295" text-anchor="middle">Room air</text>
+            <path class="flow" d="M162 205H205"/>
+
+            <rect class="box" x="210" y="170" width="100" height="70" rx="12"/>
+            <path class="ln" d="M226 190h36M226 205h36M226 220h36"/><circle class="ln" cx="285" cy="205" r="11"/>
+            <text class="hd" x="260" y="265" text-anchor="middle">Air pump</text>
+
+            <rect class="lid" x="372" y="88" width="196" height="14" rx="5"/>
+            <rect class="glass" x="380" y="100" width="180" height="230" rx="14"/>
+            <rect class="water" x="387" y="130" width="166" height="193" rx="9"/>
+            <g class="algae"><circle cx="420" cy="160" r="7"/><circle cx="510" cy="170" r="8"/><circle cx="430" cy="215" r="6"/><circle cx="520" cy="230" r="7"/><circle cx="415" cy="270" r="8"/><circle cx="525" cy="285" r="6"/><circle cx="500" cy="200" r="5"/></g>
+            <path class="tube" d="M310 205C345 205 350 300 380 300H442"/>
+            <rect class="stone" x="440" y="294" width="34" height="12" rx="6"/>
+            <circle class="bub" cx="452" cy="278" r="4"/><circle class="bub" cx="464" cy="256" r="5"/><circle class="bub" cx="454" cy="230" r="3"/><circle class="bub" cx="462" cy="204" r="4"/><circle class="bub" cx="456" cy="176" r="5"/><circle class="bub" cx="464" cy="150" r="3"/>
+            <text class="sm" x="470" y="122" text-anchor="middle">CO₂ bubbles dissolve</text>
+            <text class="hd" x="470" y="355" text-anchor="middle">Algae photosynthesis</text>
+            <text class="sm" x="470" y="375" text-anchor="middle">CO₂ + water + light → biomass + O₂</text>
+
+            <path class="flow" d="M470 84V40"/>
+            <text class="st" x="484" y="50">O₂ released</text>
+
+            <path class="flow" d="M565 215H615"/>
+            <rect class="box" x="620" y="150" width="150" height="140" rx="14"/>
+            <g class="algae"><circle cx="680" cy="195" r="11"/><circle cx="703" cy="185" r="9"/><circle cx="712" cy="207" r="10"/><circle cx="690" cy="215" r="8"/></g>
+            <text class="hd" x="695" y="252" text-anchor="middle">Carbon stored</text>
+            <text class="sm" x="695" y="270" text-anchor="middle">in algae biomass</text>
+
+            <path class="flow" d="M775 215H815"/>
+            <rect class="box" x="820" y="140" width="120" height="150" rx="10"/>
+            <rect class="qrf" x="847" y="157" width="18" height="18"/><rect class="qrf" x="893" y="157" width="18" height="18"/><rect class="qrf" x="847" y="195" width="18" height="18"/>
+            <rect class="qr" x="874" y="160" width="6" height="6"/><rect class="qr" x="880" y="176" width="6" height="6"/><rect class="qr" x="872" y="190" width="6" height="6"/><rect class="qr" x="888" y="196" width="6" height="6"/><rect class="qr" x="900" y="186" width="6" height="6"/><rect class="qr" x="896" y="206" width="6" height="6"/><rect class="qr" x="876" y="206" width="6" height="6"/><rect class="qr" x="908" y="200" width="6" height="6"/>
+            <text class="hd" x="880" y="245" text-anchor="middle">Tracker Card</text>
+            <text class="sm" x="880" y="263" text-anchor="middle">log growth, then</text>
+            <text class="sm" x="880" y="279" text-anchor="middle">learn via QR site</text>
+          </svg>
+        </div>
+        <div class="body">
+          <h3>Learn Carbon Capture &amp; Credits</h3>
+          <p>Every bubble carries CO₂ to the algae, which lock the carbon into new growth and release oxygen. Track your culture on the Carbon Credit Tracker Card and scan its QR code to learn how living systems support real climate solutions.</p>
+        </div>
+      </article>
+
+      <!-- Module 5: assembly steps -->
+      <article class="module">
+        <div class="diagram">
+          <svg class="dg" viewBox="0 0 960 400" role="img" aria-label="Five assembly steps: fill the chamber and add nutrients, insert the electrode module, connect the red lead to plus and black lead to minus, turn on the pump and place in light, then read the LED output.">
+            <g transform="translate(12 40)">
+              <rect class="panel" width="176" height="300" rx="14"/>
+              <circle class="badge" cx="24" cy="26" r="13"/><text class="badge-t" x="24" y="31" text-anchor="middle">1</text>
+              <text class="hd" x="46" y="31">Fill &amp; feed</text>
+              <rect class="glass" x="55" y="80" width="70" height="120" rx="10"/>
+              <rect class="water" x="60" y="110" width="60" height="85" rx="6"/>
+              <rect class="box" x="105" y="45" width="40" height="34" rx="5" transform="rotate(-35 125 62)"/>
+              <circle class="algae" cx="100" cy="76" r="3"/><circle class="algae" cx="95" cy="90" r="3"/><circle class="algae" cx="91" cy="103" r="3"/>
+              <text class="st" x="88" y="240" text-anchor="middle">Fill with water and</text>
+              <text class="st" x="88" y="258" text-anchor="middle">add a nutrient pack</text>
+            </g>
+            <path class="flow" d="M189 190H199"/>
+            <g transform="translate(200 40)">
+              <rect class="panel" width="176" height="300" rx="14"/>
+              <circle class="badge" cx="24" cy="26" r="13"/><text class="badge-t" x="24" y="31" text-anchor="middle">2</text>
+              <text class="hd" x="46" y="31">Add electrodes</text>
+              <rect class="glass" x="53" y="80" width="70" height="120" rx="10"/>
+              <rect class="water" x="58" y="110" width="60" height="85" rx="6"/>
+              <circle class="algae" cx="88" cy="140" r="4"/><circle class="algae" cx="90" cy="172" r="5"/>
+              <rect class="graphite" x="66" y="64" width="9" height="120" rx="2"/>
+              <rect class="graphite" x="101" y="64" width="9" height="120" rx="2"/>
+              <path class="flow" d="M70 42V58M106 42V58"/>
+              <text class="st" x="88" y="240" text-anchor="middle">Slide the electrode</text>
+              <text class="st" x="88" y="258" text-anchor="middle">module into place</text>
+            </g>
+            <path class="flow" d="M377 190H387"/>
+            <g transform="translate(388 40)">
+              <rect class="panel" width="176" height="300" rx="14"/>
+              <circle class="badge" cx="24" cy="26" r="13"/><text class="badge-t" x="24" y="31" text-anchor="middle">3</text>
+              <text class="hd" x="46" y="31">Connect leads</text>
+              <rect class="glass" x="18" y="95" width="66" height="110" rx="10"/>
+              <rect class="water" x="23" y="125" width="56" height="75" rx="6"/>
+              <rect class="graphite" x="32" y="85" width="8" height="105" rx="2"/>
+              <rect class="graphite" x="62" y="85" width="8" height="105" rx="2"/>
+              <rect class="board" x="108" y="95" width="56" height="50" rx="6"/>
+              <path class="blk" d="M36 85C36 50 150 50 150 95"/>
+              <path class="red" d="M66 85C66 65 122 65 122 95"/>
+              <circle class="post-red" cx="122" cy="95" r="4"/><circle class="post-blk" cx="150" cy="95" r="4"/>
+              <circle class="led" cx="136" cy="122" r="6"/>
+              <text class="st" x="88" y="240" text-anchor="middle">Red lead to +,</text>
+              <text class="st" x="88" y="258" text-anchor="middle">black lead to −</text>
+            </g>
+            <path class="flow" d="M565 190H575"/>
+            <g transform="translate(576 40)">
+              <rect class="panel" width="176" height="300" rx="14"/>
+              <circle class="badge" cx="24" cy="26" r="13"/><text class="badge-t" x="24" y="31" text-anchor="middle">4</text>
+              <text class="hd" x="46" y="31">Air &amp; light</text>
+              <rect class="glass" x="78" y="80" width="70" height="120" rx="10"/>
+              <rect class="water" x="83" y="110" width="60" height="85" rx="6"/>
+              <rect class="box" x="12" y="160" width="44" height="34" rx="6"/>
+              <path class="tube" d="M56 177H100"/>
+              <rect class="stone" x="100" y="172" width="20" height="9" rx="4"/>
+              <circle class="bub" cx="110" cy="160" r="3"/><circle class="bub" cx="114" cy="142" r="4"/><circle class="bub" cx="108" cy="124" r="3"/>
+              <circle class="sun" cx="38" cy="78" r="12"/>
+              <path class="sunray" d="M38 58v-6M38 98v6M18 78h-6M58 78h6"/>
+              <path class="ray" d="M54 92L74 108"/>
+              <text class="st" x="88" y="240" text-anchor="middle">Turn on the pump,</text>
+              <text class="st" x="88" y="258" text-anchor="middle">set it in the light</text>
+            </g>
+            <path class="flow" d="M753 190H763"/>
+            <g transform="translate(764 40)">
+              <rect class="panel" width="176" height="300" rx="14"/>
+              <circle class="badge" cx="24" cy="26" r="13"/><text class="badge-t" x="24" y="31" text-anchor="middle">5</text>
+              <text class="hd" x="46" y="31">Read output</text>
+              <rect class="board" x="28" y="70" width="120" height="110" rx="10"/>
+              <circle class="glow" cx="88" cy="110" r="24"/><circle class="led" cx="88" cy="110" r="11"/>
+              <rect class="seg on" x="44" y="150" width="14" height="10" rx="2"/><rect class="seg on" x="62" y="150" width="14" height="10" rx="2"/><rect class="seg on" x="80" y="150" width="14" height="10" rx="2"/><rect class="seg" x="98" y="150" width="14" height="10" rx="2"/><rect class="seg" x="116" y="150" width="14" height="10" rx="2"/>
+              <text class="st" x="88" y="240" text-anchor="middle">Watch the LED and</text>
+              <text class="st" x="88" y="258" text-anchor="middle">record your readings</text>
+            </g>
+          </svg>
+        </div>
+        <div class="body">
+          <h3>Perfect for Classrooms &amp; Makers</h3>
+          <p>Five clear steps take students from an empty chamber to glowing results. Shaped by feedback from 10 student and educator beta testers, the kit fits science classes, sustainability clubs, science fairs and home projects.</p>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">Algae Energy Kit · Grow power. See energy. Learn sustainability.</div>
+</footer>
+
+</body>
+</html>

@@ -29,15 +29,15 @@
   .ready #scene { visibility: visible; }
   .failed #scene, .failed .controls, .failed #hint, .failed .tabs { display: none; }
 
-  .panel { position: absolute; left: max(40px, 4vw); top: clamp(40px, 11vh, 120px); margin: -16px 0 0 -20px; padding: 16px 20px 18px; border-radius: 16px; background: rgba(230, 233, 230, .9); width: min(30vw, 380px); pointer-events: none; }
+  .panel { position: absolute; left: 50%; transform: translateX(-50%); top: 84px; padding: 4px 16px; border-radius: 12px; background: rgba(230, 233, 230, .9); width: max-content; max-width: calc(100% - 32px); text-align: center; pointer-events: none; }
   .panel:not(:first-of-type) { opacity: 0; visibility: hidden; }
   .panel h1, .panel h2 { margin: 0; font-size: clamp(26px, 3vw, 40px); line-height: 1.1; letter-spacing: -.015em; text-wrap: balance; }
-  @media (min-width: 900px) { .panel:first-of-type { width: auto; } .panel h1 { white-space: nowrap; } }
+  .panel h1 { font-family: "Times New Roman", Times, serif; letter-spacing: 0; }
+  @media (min-width: 900px) { .panel h1 { white-space: nowrap; } }
 
   #status, #hint { position: absolute; left: 50%; transform: translateX(-50%); background: var(--surface); border: 1px solid var(--border); border-radius: 0; padding: 8px 16px; font-size: 14px; text-align: center; pointer-events: none; }
   #status { top: 96px; max-width: calc(100% - 32px); width: max-content; }
   #hint { bottom: calc(var(--bar) + 16px); white-space: nowrap; opacity: 0; transition: opacity .4s; }
-  @media (min-width: 900px) { #hint { left: calc(50% + 15vw); } }
   .ready #hint { opacity: 1; }
   .ready #hint.gone { opacity: 0; }
 
@@ -48,7 +48,6 @@
 
   @media (max-width: 899px) {
     :root { --bar: 112px; }
-    .panel { left: 20px; right: 20px; top: 20px; margin: -8px -8px 0; padding: 8px; width: auto; max-width: 560px; }
     .panel h1, .panel h2 { font-size: 26px; margin-bottom: 4px; }
     .bar { flex-direction: column; justify-content: flex-end; gap: 4px; padding: 0 8px 8px; }
     .tabs { width: 100%; justify-content: center; order: 2; }
@@ -66,7 +65,7 @@
   [data-mode="slides"] #track, [data-mode="model"] #deck { display: none; }   /* right view from the first frame */
   #slide { display: block; width: 100%; max-width: 1600px; height: auto; max-height: calc(100svh - 170px); object-fit: contain; background: #fff; border: 1px solid var(--border); }
   .deck-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px 12px; font-size: 14px; }
-  @media (max-width: 899px) { .panel { top: 80px; } }
+  @media (max-width: 899px) { .panel { top: 72px; } }
 </style>
 </head>
 <body>

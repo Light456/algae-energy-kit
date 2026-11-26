@@ -245,14 +245,12 @@ function start() {
     renderer.setPixelRatio(dpr);
     renderer.setSize(W, H, false);
     camera.aspect = W / H;
-    // Keep the product clear of the text: text sits left on wide screens, on top on narrow ones.
-    const wide = W >= 900;
-    const left = wide ? Math.min(W * 0.33, 420) : 0;
-    const top = wide ? 40 : panels.reduce((m, el) => Math.max(m, el.offsetTop + el.offsetHeight), 0) + 8;
+    // Centre the product between the title (top centre, under the view switch) and the button bar.
+    const top = panels.reduce((m, el) => Math.max(m, el.offsetTop + el.offsetHeight), 0) + 8;
     const bottom = H - Math.min($('.bar').offsetTop, H) + 8;
-    const w = W - left - (wide ? 40 : 16);
+    const w = W - 32;
     const h = Math.max(H - top - bottom, 160);
-    safe = { w: w / W, h: h / H, cx: left + w / 2 - W / 2 + (wide ? 0 : 0), cy: top + h / 2 - H / 2 };
+    safe = { w: w / W, h: h / H, cx: 0, cy: top + h / 2 - H / 2 };
     camera.setViewOffset(W, H, -safe.cx, -safe.cy, W, H);
     for (const v of VIEWS) v.dist = fit(v);
     wake();
